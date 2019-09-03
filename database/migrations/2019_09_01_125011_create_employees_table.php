@@ -20,8 +20,8 @@ class CreateEmployeesTable extends Migration
             $table->string('gender', 50);
             $table->float('salary', 8, 2);
             $table->string('designation', 20);
-            $table->string('image', 100);
-            $table->date('import_date');
+            $table->string('image', 100)->nullable();
+            $table->date('import_date')->nullable();
             $table->timestamps();
         });
     }
