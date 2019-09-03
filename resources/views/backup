@@ -1,0 +1,104 @@
+@extends('layouts.app')
+@section('content')
+<div class="main-container" id="main-container">
+<div class="main-content">
+    <table class="table table-striped table-bordered table-hover" id="myTable">
+                <thead>
+                    <tr>
+                        <th>Select</th>
+                        <th>Name</th>
+                        <th>Dob</th>
+                        <th>Gender</th>
+                        <th>Salary</th>
+                        <th>Designation</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th colspan="6"></th>
+                        <th><a href="{{ url('save') }}">Add Employee</a></th>
+                    </tr>
+            </tfoot>
+    </table>
+</div>
+<script type="text/javascript">
+  $(document).ready(function(){
+  var dataurl = "list";
+  var message = "";
+  message = "<p class='text-danger'>No Record Found!! </p>";
+  var dtablelist = $("#myTable")
+    .dataTable({
+      sPaginationType: "full_numbers",
+      bSearchable: false,
+      lengthMenu: [
+        [15, 30, 45, 60, 100, 200, 500, -1],
+        [15, 30, 45, 60, 100, 200, 500, "All"]
+      ],
+      iDisplayLength: 10,
+      sDom: "ltipr",
+      bAutoWidth: false,
+      autoWidth: true,
+      aaSorting: [[0, "desc"]],
+      bProcessing: true,
+      bServerSide: true,
+      sAjaxSource: dataurl,
+      fnServerData: function (sSource, aoData, fnCallback) {
+        $.ajax({
+          dataType: "json",
+          type: "GET",
+          url: sSource,
+          data: aoData,
+          success: fnCallback
+        });
+      },
+      oLanguage: {
+        sEmptyTable: message
+      },
+
+      aoColumnDefs: [
+        {
+          bSortable: false,
+          aTargets: [0]
+        }
+      ],
+
+      aoColumns: [
+        { data: "select" },
+        { data: "full_name" },
+        { data: "dob" },
+        { data: "gender" },
+        { data: "salary" },
+        { data: "designation" },
+        { data: "action" }
+      ],
+
+      fnRowCallback: function (nRow, aData, iDisplayIndex) {
+        var oSettings = dtablelist.fnSettings();
+        // $("td:first", nRow).html(oSettings._iDisplayStart + iDisplayIndex + 1);
+        return nRow;
+      },
+
+      fnCreatedRow: function (nRow, aData, iDisplayIndex) {
+        var oSettings = dtablelist.fnSettings();
+        var tblid = oSettings._iDisplayStart + iDisplayIndex + 1;
+        $(nRow).attr("id", "listid_" + tblid);
+      }
+    })
+    .columnFilter({
+      sPlaceHolder: "head:after",
+
+      aoColumns: [
+        { type: null },
+        // { type: null },
+        { type: "text" },
+        { type: "text" },
+        { type: "text" },
+        { type: "text" },
+        { type: "text" }
+      ]
+    });
+
+    });
+</script>
+@endsection
